@@ -2,7 +2,7 @@ import express from "express";
 import { ChatGPTModel } from "./model";
 const app = express();
 app.use(express.json());
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.get("/webhook", async (req: any, res: any) => {
   const chatGPT = new ChatGPTModel();

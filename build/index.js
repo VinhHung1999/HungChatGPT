@@ -43,7 +43,7 @@ var express_1 = __importDefault(require("express"));
 var model_1 = require("./model");
 var app = (0, express_1.default)();
 app.use(express_1.default.json());
-var port = 3000;
+var port = process.env.PORT || 3000;
 app.get("/webhook", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var chatGPT, answer;
     return __generator(this, function (_a) {
