@@ -87,7 +87,10 @@ app.get("/", function (req, res) {
 });
 app.post("/", function (req, res) {
     var body = req.body;
+    console.log(body);
+    console.log(JSON.stringify(body));
     console.log(body.entry[0].messaging);
+    res.sendStatus(200);
 });
 app.listen(port, function () {
     console.log("Example app listening on port ".concat(port));

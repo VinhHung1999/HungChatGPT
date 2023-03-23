@@ -41,6 +41,8 @@ app.get("/", (req, res) => {
 
 app.post("/", (req, res) => {
   const body = req.body;
+  console.log(body);
+  console.log(JSON.stringify(body));
   console.log(body.entry[0].messaging);
   res.sendStatus(200);
 });
