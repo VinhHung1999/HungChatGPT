@@ -4,7 +4,8 @@
   "main": "build/index.js",
   "license": "MIT",
   "scripts": {
-    "start": "npx nodemon ./src/index.ts",
+    "start": "node ./build/index",
+    "start:metro": "npx nodemon ./src/index.ts",
     "build": "tsc --build"
   },
   "dependencies": {
@@ -16,7 +17,6 @@
     "@types/express": "^4.17.17",
     "@types/node": "^18.15.5",
     "nodemon": "^2.0.22",
-    "ts-node": "^10.9.1",
     "typescript": "^5.0.2"
   }
 }
