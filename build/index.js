@@ -44,6 +44,7 @@ var model_1 = require("./model");
 var app = (0, express_1.default)();
 app.use(express_1.default.json());
 var port = process.env.PORT || 3000;
+var token = "EAAQ3Xgh37mYBAL0mHL7lAWvcrqjNO7iFwWA3QNeVN5VJrrai0S0SEhQ3JPeXMZAXgY0NkrFJWzuaBTnMjXsTyLVvpRCJlDZBvpGrTIEUz9AwaT3TPJz6MKCOLQ4jvk4X6ZACVEchgPGANoLvkA6AAW8qLZAy2f8uR2w2H1ZAiuGxpYxnwM3dq";
 app.get("/webhook", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var chatGPT, answer;
     return __generator(this, function (_a) {
@@ -59,6 +60,25 @@ app.get("/webhook", function (req, res) { return __awaiter(void 0, void 0, void 
         }
     });
 }); });
+app.get("/", function (req, res) {
+    // Parse the query params
+    var mode = req.query["hub.mode"];
+    var token = req.query["hub.verify_token"];
+    var challenge = req.query["hub.challenge"];
+    // Check if a token and mode is in the query string of the request
+    if (mode && token) {
+        // Check the mode and token sent is correct
+        if (mode === "subscribe" && token === token) {
+            // Respond with the challenge token from the request
+            console.log("WEBHOOK_VERIFIED");
+            res.status(200).send(challenge);
+        }
+        else {
+            // Respond with '403 Forbidden' if verify tokens do not match
+            res.sendStatus(403);
+        }
+    }
+});
 app.listen(port, function () {
     console.log("Example app listening on port ".concat(port));
 });
