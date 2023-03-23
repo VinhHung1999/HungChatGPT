@@ -65,6 +65,9 @@ app.get("/", function (req, res) {
     var mode = req.query["hub.mode"];
     var token = req.query["hub.verify_token"];
     var challenge = req.query["hub.challenge"];
+    console.log("mode: ", mode);
+    console.log("token: ", token);
+    console.log("challenge: ", challenge);
     // Check if a token and mode is in the query string of the request
     if (mode && token) {
         // Check the mode and token sent is correct
@@ -78,25 +81,34 @@ app.get("/", function (req, res) {
             res.sendStatus(403);
         }
     }
+    else {
+        res.sendStatus(403);
+    }
 });
 app.post("/", function (req, res) {
     // Parse the query params
     var mode = req.query["hub.mode"];
     var token = req.query["hub.verify_token"];
     var challenge = req.query["hub.challenge"];
+    console.log("mode: ", mode);
+    console.log("token: ", token);
+    console.log("challenge: ", challenge);
+    console.log(req.body);
     // Check if a token and mode is in the query string of the request
     if (mode && token) {
         // Check the mode and token sent is correct
         if (mode === "subscribe" && token === token) {
             // Respond with the challenge token from the request
             console.log("WEBHOOK_VERIFIED");
-            console.log(req.body);
             res.status(200).send(challenge);
         }
         else {
             // Respond with '403 Forbidden' if verify tokens do not match
             res.sendStatus(403);
         }
+    }
+    else {
+        res.sendStatus(403);
     }
 });
 app.listen(port, function () {
