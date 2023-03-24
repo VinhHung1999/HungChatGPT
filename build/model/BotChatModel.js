@@ -57,8 +57,8 @@ var BotChatModel = /** @class */ (function () {
                         return [2 /*return*/, answer];
                     case 2:
                         e_1 = _a.sent();
-                        console.log(e_1);
-                        return [2 /*return*/, "SomeThing went wrong!!"];
+                        // console.log(e);
+                        return [2 /*return*/, ""];
                     case 3: return [2 /*return*/];
                 }
             });
@@ -77,7 +77,6 @@ var BotChatModel = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         e_2 = _a.sent();
-                        console.log(e_2);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }

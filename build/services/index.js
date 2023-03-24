@@ -9,15 +9,13 @@ var callGPTAPI = function (message) {
     });
     return new Promise(function (resolve, reject) {
         var params = {
-            prompt: message,
-            model: "text-davinci-003",
-            max_tokens: 10,
-            temperature: 0,
+            messages: [{ role: "user", content: message }],
+            model: "gpt-3.5-turbo",
         };
         client
-            .post("https://api.openai.com/v1/completions", params)
+            .post("https://api.openai.com/v1/chat/completions", params)
             .then(function (result) {
-            resolve(result.data.choices[0].text);
+            resolve(result.data.choices[0].message.content);
         })
             .catch(function (err) {
             reject(err);

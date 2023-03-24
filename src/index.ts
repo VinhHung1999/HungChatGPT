@@ -48,9 +48,11 @@ app.post("/", async (req, res) => {
     const message = body.entry?.[0].messaging?.[0].message?.text || "Nothing";
     console.log("message: ", message);
     console.log("recipientId: ", recipientId);
-    // const answer = await botChat.getAnswerFromGPT(message);
-    // console.log("GPT answer: ", answer);
-    // botChat.sendMessageBackToUser(answer, recipientId);
+    const answer = await botChat.getAnswerFromGPT(message);
+    console.log("GPT answer: ", answer);
+    if (answer !== "") {
+      await botChat.sendMessageBackToUser(answer, recipientId);
+    }
     console.log("SendFaceBook Success");
     res.sendStatus(200);
   } else {

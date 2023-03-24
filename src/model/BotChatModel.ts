@@ -8,8 +8,8 @@ export class BotChatModel {
       const answer = await Services.callGPTAPI(message);
       return answer;
     } catch (e) {
-      console.log(e);
-      return "SomeThing went wrong!!";
+      // console.log(e);
+      return "";
     }
   }
 
@@ -17,7 +17,7 @@ export class BotChatModel {
     try {
       await Services.sendMessageBackToFB(message, recipientId);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   }
 }
