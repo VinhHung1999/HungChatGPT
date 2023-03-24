@@ -1,15 +1,13 @@
 import express from "express";
-import { ChatGPTModel } from "./model";
+import { BotChatModel } from "./model";
 const app = express();
 app.use(express.json());
 const port = process.env.PORT || 3000;
 
-const token =
-  "EAAQ3Xgh37mYBAL0mHL7lAWvcrqjNO7iFwWA3QNeVN5VJrrai0S0SEhQ3JPeXMZAXgY0NkrFJWzuaBTnMjXsTyLVvpRCJlDZBvpGrTIEUz9AwaT3TPJz6MKCOLQ4jvk4X6ZACVEchgPGANoLvkA6AAW8qLZAy2f8uR2w2H1ZAiuGxpYxnwM3dq";
+const botChat = new BotChatModel();
 
 app.get("/webhook", async (req: any, res: any) => {
-  const chatGPT = new ChatGPTModel();
-  const answer = await chatGPT.getMessage(req.body.message);
+  const answer = await botChat.getAnswerFromGPT(req.body.message);
   console.log(req.body);
   res.send(answer);
 });
@@ -19,10 +17,6 @@ app.get("/", (req, res) => {
   let mode = req.query["hub.mode"];
   let token = req.query["hub.verify_token"];
   let challenge = req.query["hub.challenge"];
-  console.log("mode: ", mode);
-  console.log("token: ", token);
-  console.log("challenge: ", challenge);
-
   // Check if a token and mode is in the query string of the request
   if (mode && token) {
     // Check the mode and token sent is correct
@@ -39,11 +33,15 @@ app.get("/", (req, res) => {
   }
 });
 
-app.post("/", (req, res) => {
+app.post("/", async (req, res) => {
   const body = req.body;
-  console.log(body);
-  console.log(JSON.stringify(body));
-  console.log(body.entry[0].messaging);
+  // console.log(body);
+  // console.log(JSON.stringify(body));
+  const recipientId = body.entry[0].messaging[0].recipient.id;
+  const message = body.entry[0].messaging[0].message.text;
+  const answer = await botChat.getAnswerFromGPT(message);
+  console.log("GPT answer: ", answer);
+  // botChat.sendMessageBackToUser(answer, recipientId);
   res.sendStatus(200);
 });
 

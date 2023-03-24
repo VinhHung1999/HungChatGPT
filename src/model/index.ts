@@ -1,1 +1,1 @@
-export * from "./ChatGPTModel";
+export * from "./BotChatModel";

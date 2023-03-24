@@ -39,65 +39,51 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-var model_1 = require("./model");
-var app = (0, express_1.default)();
-app.use(express_1.default.json());
-var port = process.env.PORT || 3000;
-var botChat = new model_1.BotChatModel();
-app.get("/webhook", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var answer;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, botChat.getAnswerFromGPT(req.body.message)];
-            case 1:
-                answer = _a.sent();
-                console.log(req.body);
-                res.send(answer);
-                return [2 /*return*/];
-        }
-    });
-}); });
-app.get("/", function (req, res) {
-    // Parse the query params
-    var mode = req.query["hub.mode"];
-    var token = req.query["hub.verify_token"];
-    var challenge = req.query["hub.challenge"];
-    // Check if a token and mode is in the query string of the request
-    if (mode && token) {
-        // Check the mode and token sent is correct
-        if (mode === "subscribe" && token === token) {
-            // Respond with the challenge token from the request
-            console.log("WEBHOOK_VERIFIED");
-            res.status(200).send(challenge);
-        }
-        else {
-            // Respond with '403 Forbidden' if verify tokens do not match
-            res.sendStatus(403);
-        }
+exports.BotChatModel = void 0;
+var services_1 = __importDefault(require("../services"));
+var BotChatModel = /** @class */ (function () {
+    function BotChatModel() {
     }
-    else {
-        res.sendStatus(403);
-    }
-});
-app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var body, recipientId, message, answer;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                body = req.body;
-                recipientId = body.entry[0].messaging[0].recipient.id;
-                message = body.entry[0].messaging[0].message.text;
-                return [4 /*yield*/, botChat.getAnswerFromGPT(message)];
-            case 1:
-                answer = _a.sent();
-                console.log("GPT answer: ", answer);
-                // botChat.sendMessageBackToUser(answer, recipientId);
-                res.sendStatus(200);
-                return [2 /*return*/];
-        }
-    });
-}); });
-app.listen(port, function () {
-    console.log("Example app listening on port ".concat(port));
-});
+    BotChatModel.prototype.getAnswerFromGPT = function (message) {
+        return __awaiter(this, void 0, void 0, function () {
+            var answer, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, services_1.default.callGPTAPI(message)];
+                    case 1:
+                        answer = _a.sent();
+                        return [2 /*return*/, answer];
+                    case 2:
+                        e_1 = _a.sent();
+                        // console.log(e.response);
+                        return [2 /*return*/, "SomeThing went wrong!!"];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    BotChatModel.prototype.sendMessageBackToUser = function (message, recipientId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var e_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, services_1.default.sendMessageBackToFB(message, recipientId)];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        e_2 = _a.sent();
+                        console.log(e_2);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return BotChatModel;
+}());
+exports.BotChatModel = BotChatModel;
