@@ -26,7 +26,6 @@ var callGPTAPI = function (message) {
 };
 var sendMessageBackToFB = function (message, recipientId) {
     return new Promise(function (resolve, reject) {
-        console.log("recipientId", recipientId);
         var params = {
             recipient: {
                 id: "6245799878821771",
