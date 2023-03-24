@@ -83,6 +83,28 @@ app.get("/webhook", function (req, res) {
         res.sendStatus(403);
     }
 });
+app.get("/webhook", function (req, res) {
+    // Parse the query params
+    var mode = req.query["hub.mode"];
+    var token = req.query["hub.verify_token"];
+    var challenge = req.query["hub.challenge"];
+    // Check if a token and mode is in the query string of the request
+    if (mode && token) {
+        // Check the mode and token sent is correct
+        if (mode === "subscribe" && token === TOKEN) {
+            // Respond with the challenge token from the request
+            console.log("WEBHOOK_VERIFIED");
+            res.status(200).send(challenge);
+        }
+        else {
+            // Respond with '403 Forbidden' if verify tokens do not match
+            res.sendStatus(403);
+        }
+    }
+    else {
+        res.sendStatus(403);
+    }
+});
 app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var body, senderId, message, answer, e_1;
     var _a, _b, _c, _d, _e, _f, _g, _h;
