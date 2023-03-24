@@ -40,11 +40,10 @@ app.post("/", async (req, res) => {
   try {
     const body = req.body;
 
-    console.log("body", JSON.stringify(body));
-    // console.log(JSON.stringify(body));
+    const messageId = body.entry?.[0]?.id;
     const recipientId = body.entry?.[0]?.messaging?.[0]?.sender?.id || "";
     console.log("recipientId: ", recipientId);
-    if (recipientId !== process.env.PAGE_ID) {
+    if (messageId !== process.env.PAGE_ID) {
       const message = body.entry?.[0].messaging?.[0].message?.text || "Nothing";
       console.log("message: ", message);
       console.log("recipientId: ", recipientId);

@@ -83,29 +83,29 @@ app.get("/", function (req, res) {
     }
 });
 app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var body, recipientId, message, answer, e_1;
-    var _a, _b, _c, _d, _e, _f, _g, _h;
-    return __generator(this, function (_j) {
-        switch (_j.label) {
+    var body, messageId, recipientId, message, answer, e_1;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+    return __generator(this, function (_l) {
+        switch (_l.label) {
             case 0:
-                _j.trys.push([0, 6, , 7]);
+                _l.trys.push([0, 6, , 7]);
                 body = req.body;
-                console.log("body", JSON.stringify(body));
-                recipientId = ((_e = (_d = (_c = (_b = (_a = body.entry) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.messaging) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.sender) === null || _e === void 0 ? void 0 : _e.id) || "";
+                messageId = (_b = (_a = body.entry) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.id;
+                recipientId = ((_g = (_f = (_e = (_d = (_c = body.entry) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.messaging) === null || _e === void 0 ? void 0 : _e[0]) === null || _f === void 0 ? void 0 : _f.sender) === null || _g === void 0 ? void 0 : _g.id) || "";
                 console.log("recipientId: ", recipientId);
-                if (!(recipientId !== process.env.PAGE_ID)) return [3 /*break*/, 4];
-                message = ((_h = (_g = (_f = body.entry) === null || _f === void 0 ? void 0 : _f[0].messaging) === null || _g === void 0 ? void 0 : _g[0].message) === null || _h === void 0 ? void 0 : _h.text) || "Nothing";
+                if (!(messageId !== process.env.PAGE_ID)) return [3 /*break*/, 4];
+                message = ((_k = (_j = (_h = body.entry) === null || _h === void 0 ? void 0 : _h[0].messaging) === null || _j === void 0 ? void 0 : _j[0].message) === null || _k === void 0 ? void 0 : _k.text) || "Nothing";
                 console.log("message: ", message);
                 console.log("recipientId: ", recipientId);
                 return [4 /*yield*/, botChat.getAnswerFromGPT(message)];
             case 1:
-                answer = _j.sent();
+                answer = _l.sent();
                 console.log("GPT answer: ", answer);
                 if (!(answer !== "")) return [3 /*break*/, 3];
                 return [4 /*yield*/, botChat.sendMessageBackToUser(answer, recipientId)];
             case 2:
-                _j.sent();
-                _j.label = 3;
+                _l.sent();
+                _l.label = 3;
             case 3:
                 console.log("SendFaceBook Success");
                 res.sendStatus(200);
@@ -113,10 +113,10 @@ app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, fun
             case 4:
                 console.log("botchat message:");
                 res.sendStatus(200);
-                _j.label = 5;
+                _l.label = 5;
             case 5: return [3 /*break*/, 7];
             case 6:
-                e_1 = _j.sent();
+                e_1 = _l.sent();
                 console.log(e_1);
                 res.sendStatus(999);
                 return [3 /*break*/, 7];
