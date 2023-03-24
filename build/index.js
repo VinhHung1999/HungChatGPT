@@ -47,6 +47,7 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
 var app = (0, express_1.default)();
 app.use(express_1.default.json());
 var port = process.env.PORT || 3000;
+var hello = 0;
 var botChat = new model_1.BotChatModel();
 app.get("/gpt", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var answer;
@@ -60,7 +61,7 @@ app.get("/gpt", function (req, res) { return __awaiter(void 0, void 0, void 0, f
         }
     });
 }); });
-app.get("/", function (req, res) {
+app.post("/webhook", function (req, res) {
     // Parse the query params
     var mode = req.query["hub.mode"];
     var token = req.query["hub.verify_token"];
@@ -83,30 +84,30 @@ app.get("/", function (req, res) {
     }
 });
 app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var body, messageId, recipientId, message, answer, e_1;
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
-    return __generator(this, function (_l) {
-        switch (_l.label) {
+    var body, senderId, message, answer, e_1;
+    var _a, _b, _c, _d, _e, _f, _g, _h;
+    return __generator(this, function (_j) {
+        switch (_j.label) {
             case 0:
-                _l.trys.push([0, 6, , 7]);
+                _j.trys.push([0, 6, , 7]);
                 body = req.body;
-                messageId = (_b = (_a = body.entry) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.id;
-                recipientId = ((_g = (_f = (_e = (_d = (_c = body.entry) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.messaging) === null || _e === void 0 ? void 0 : _e[0]) === null || _f === void 0 ? void 0 : _f.sender) === null || _g === void 0 ? void 0 : _g.id) || "";
-                console.log("recipientId: ", recipientId);
-                console.log("body: ", JSON.stringify(body, null, 2));
-                if (!(messageId !== process.env.PAGE_ID)) return [3 /*break*/, 4];
-                message = ((_k = (_j = (_h = body.entry) === null || _h === void 0 ? void 0 : _h[0].messaging) === null || _j === void 0 ? void 0 : _j[0].message) === null || _k === void 0 ? void 0 : _k.text) || "Nothing";
+                senderId = ((_e = (_d = (_c = (_b = (_a = body.entry) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.messaging) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.sender) === null || _e === void 0 ? void 0 : _e.id) || "";
+                console.log("recipientId: ", senderId);
+                console.log("body: ", JSON.stringify(body));
+                if (!(senderId != process.env.PAGE_ID)) return [3 /*break*/, 4];
+                message = ((_h = (_g = (_f = body.entry) === null || _f === void 0 ? void 0 : _f[0].messaging) === null || _g === void 0 ? void 0 : _g[0].message) === null || _h === void 0 ? void 0 : _h.text) || "Nothing";
                 console.log("message: ", message);
-                console.log("recipientId: ", recipientId);
+                console.log("recipientId: ", senderId);
                 return [4 /*yield*/, botChat.getAnswerFromGPT(message)];
             case 1:
-                answer = _l.sent();
+                answer = _j.sent();
                 console.log("GPT answer: ", answer);
-                if (!(answer !== "")) return [3 /*break*/, 3];
-                return [4 /*yield*/, botChat.sendMessageBackToUser(answer, recipientId)];
+                if (!(answer !== "" && hello < 10)) return [3 /*break*/, 3];
+                return [4 /*yield*/, botChat.sendMessageBackToUser(answer, senderId)];
             case 2:
-                _l.sent();
-                _l.label = 3;
+                _j.sent();
+                hello += 1;
+                _j.label = 3;
             case 3:
                 console.log("SendFaceBook Success");
                 res.sendStatus(200);
@@ -114,10 +115,10 @@ app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, fun
             case 4:
                 console.log("botchat message:");
                 res.sendStatus(200);
-                _l.label = 5;
+                _j.label = 5;
             case 5: return [3 /*break*/, 7];
             case 6:
-                e_1 = _l.sent();
+                e_1 = _j.sent();
                 console.log(e_1);
                 res.sendStatus(999);
                 return [3 /*break*/, 7];
