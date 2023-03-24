@@ -88,6 +88,9 @@ app.get("/", function (req, res) {
     var mode = req.query["hub.mode"];
     var token = req.query["hub.verify_token"];
     var challenge = req.query["hub.challenge"];
+    console.log("token: ", token);
+    console.log("mode: ", mode);
+    console.log("challenge: ", challenge);
     // Check if a token and mode is in the query string of the request
     if (mode && token) {
         // Check the mode and token sent is correct
