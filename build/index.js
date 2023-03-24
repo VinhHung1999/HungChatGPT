@@ -47,7 +47,7 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
 var app = (0, express_1.default)();
 app.use(express_1.default.json());
 var port = process.env.PORT || 3000;
-var hello = 0;
+var TOKEN = "EAAQ3Xgh37mYBAL0mHL7lAWvcrqjNO7iFwWA3QNeVN5VJrrai0S0SEhQ3JPeXMZAXgY0NkrFJWzuaBTnMjXsTyLVvpRCJlDZBvpGrTIEUz9AwaT3TPJz6MKCOLQ4jvk4X6ZACVEchgPGANoLvkA6AAW8qLZAy2f8uR2w2H1ZAiuGxpYxnwM3dq";
 var botChat = new model_1.BotChatModel();
 app.get("/gpt", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var answer;
@@ -61,7 +61,7 @@ app.get("/gpt", function (req, res) { return __awaiter(void 0, void 0, void 0, f
         }
     });
 }); });
-app.post("/webhook", function (req, res) {
+app.get("/webhook", function (req, res) {
     // Parse the query params
     var mode = req.query["hub.mode"];
     var token = req.query["hub.verify_token"];
@@ -69,7 +69,7 @@ app.post("/webhook", function (req, res) {
     // Check if a token and mode is in the query string of the request
     if (mode && token) {
         // Check the mode and token sent is correct
-        if (mode === "subscribe" && token === token) {
+        if (mode === "subscribe" && token === TOKEN) {
             // Respond with the challenge token from the request
             console.log("WEBHOOK_VERIFIED");
             res.status(200).send(challenge);
@@ -102,25 +102,23 @@ app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, fun
             case 1:
                 answer = _j.sent();
                 console.log("GPT answer: ", answer);
-                if (!(answer !== "" && hello < 10)) return [3 /*break*/, 3];
+                if (!(answer !== "")) return [3 /*break*/, 3];
                 return [4 /*yield*/, botChat.sendMessageBackToUser(answer, senderId)];
             case 2:
                 _j.sent();
-                hello += 1;
                 _j.label = 3;
             case 3:
                 console.log("SendFaceBook Success");
                 res.sendStatus(200);
                 return [3 /*break*/, 5];
             case 4:
-                console.log("botchat message:");
                 res.sendStatus(200);
                 _j.label = 5;
             case 5: return [3 /*break*/, 7];
             case 6:
                 e_1 = _j.sent();
                 console.log(e_1);
-                res.sendStatus(999);
+                res.sendStatus(502);
                 return [3 /*break*/, 7];
             case 7: return [2 /*return*/];
         }
