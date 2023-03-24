@@ -29,7 +29,6 @@ const sendMessageBackToFB = (
   recipientId: string
 ): Promise<void> => {
   return new Promise((resolve, reject) => {
-    console.log("recipientId", recipientId);
     const params = {
       recipient: {
         id: "6245799878821771",
