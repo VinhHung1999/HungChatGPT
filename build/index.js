@@ -83,7 +83,7 @@ app.get("/webhook", function (req, res) {
         res.sendStatus(403);
     }
 });
-app.get("/webhook", function (req, res) {
+app.get("/", function (req, res) {
     // Parse the query params
     var mode = req.query["hub.mode"];
     var token = req.query["hub.verify_token"];

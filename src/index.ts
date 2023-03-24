@@ -39,7 +39,7 @@ app.get("/webhook", (req, res) => {
   }
 });
 
-app.get("/webhook", (req, res) => {
+app.get("/", (req, res) => {
   // Parse the query params
   let mode = req.query["hub.mode"];
   let token = req.query["hub.verify_token"];
