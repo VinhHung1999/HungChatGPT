@@ -43,6 +43,7 @@ app.post("/", async (req, res) => {
     const messageId = body.entry?.[0]?.id;
     const recipientId = body.entry?.[0]?.messaging?.[0]?.sender?.id || "";
     console.log("recipientId: ", recipientId);
+    console.log("body: ", JSON.stringify(body, null, 2));
     if (messageId !== process.env.PAGE_ID) {
       const message = body.entry?.[0].messaging?.[0].message?.text || "Nothing";
       console.log("message: ", message);
