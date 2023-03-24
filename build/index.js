@@ -92,7 +92,7 @@ app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, fun
                 entry = body.entry[0];
                 console.log("body", JSON.stringify(body));
                 recipientId = ((_e = (_d = (_c = (_b = (_a = body.entry) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.messaging) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.sender) === null || _e === void 0 ? void 0 : _e.id) || "";
-                if (!(recipientId !== "121800517519786")) return [3 /*break*/, 2];
+                if (!(recipientId !== process.env.PAGE_ID)) return [3 /*break*/, 2];
                 message = ((_h = (_g = (_f = body.entry) === null || _f === void 0 ? void 0 : _f[0].messaging) === null || _g === void 0 ? void 0 : _g[0].message) === null || _h === void 0 ? void 0 : _h.text) || "Nothing";
                 console.log("message: ", message);
                 console.log("recipientId: ", recipientId);
