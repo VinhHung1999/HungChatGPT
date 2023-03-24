@@ -101,6 +101,7 @@ app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, fun
                 console.log("body: ", JSON.stringify(body));
                 message = ((_h = (_g = (_f = body.entry) === null || _f === void 0 ? void 0 : _f[0].messaging) === null || _g === void 0 ? void 0 : _g[0].message) === null || _h === void 0 ? void 0 : _h.text) || "Nothing";
                 if (!(senderId != process.env.PAGE_ID && preMessage !== message)) return [3 /*break*/, 4];
+                preMessage = message;
                 console.log("message: ", message);
                 console.log("recipientId: ", senderId);
                 return [4 /*yield*/, botChat.getAnswerFromGPT(message)];
