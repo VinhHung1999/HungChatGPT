@@ -41,15 +41,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var model_1 = require("./model");
+var dotenv = require("dotenv");
+var path = require("path");
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 var app = (0, express_1.default)();
 app.use(express_1.default.json());
 var port = process.env.PORT || 3000;
 var botChat = new model_1.BotChatModel();
-app.get("/webhook", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+app.get("/gpt", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var answer;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, botChat.getAnswerFromGPT(req.body.message)];
+            case 0: return [4 /*yield*/, botChat.getAnswerFromGPT("test")];
             case 1:
                 answer = _a.sent();
                 console.log(req.body);
@@ -81,18 +84,20 @@ app.get("/", function (req, res) {
     }
 });
 app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var body, recipientId, message, answer;
+    var body, entry, recipientId, message, answer;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 body = req.body;
-                recipientId = body.entry[0].messaging[0].recipient.id;
+                entry = body.entry[0];
+                recipientId = body.entry[0].messaging[0].sender.id;
                 message = body.entry[0].messaging[0].message.text;
                 return [4 /*yield*/, botChat.getAnswerFromGPT(message)];
             case 1:
                 answer = _a.sent();
                 console.log("GPT answer: ", answer);
-                // botChat.sendMessageBackToUser(answer, recipientId);
+                botChat.sendMessageBackToUser(answer, recipientId);
+                console.log("SendFaceBook Success");
                 res.sendStatus(200);
                 return [2 /*return*/];
         }

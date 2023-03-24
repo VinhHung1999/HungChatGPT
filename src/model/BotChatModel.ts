@@ -8,7 +8,7 @@ export class BotChatModel {
       const answer = await Services.callGPTAPI(message);
       return answer;
     } catch (e) {
-      // console.log(e.response);
+      console.log(e);
       return "SomeThing went wrong!!";
     }
   }

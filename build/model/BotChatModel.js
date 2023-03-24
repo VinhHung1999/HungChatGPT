@@ -57,7 +57,7 @@ var BotChatModel = /** @class */ (function () {
                         return [2 /*return*/, answer];
                     case 2:
                         e_1 = _a.sent();
-                        // console.log(e.response);
+                        console.log(e_1);
                         return [2 /*return*/, "SomeThing went wrong!!"];
                     case 3: return [2 /*return*/];
                 }

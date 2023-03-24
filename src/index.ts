@@ -1,13 +1,17 @@
 import express from "express";
 import { BotChatModel } from "./model";
+const dotenv = require("dotenv");
+const path = require("path");
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+
 const app = express();
 app.use(express.json());
 const port = process.env.PORT || 3000;
 
 const botChat = new BotChatModel();
 
-app.get("/webhook", async (req: any, res: any) => {
-  const answer = await botChat.getAnswerFromGPT(req.body.message);
+app.get("/gpt", async (req: any, res: any) => {
+  const answer = await botChat.getAnswerFromGPT("test");
   console.log(req.body);
   res.send(answer);
 });
@@ -35,13 +39,16 @@ app.get("/", (req, res) => {
 
 app.post("/", async (req, res) => {
   const body = req.body;
+  const entry = body.entry[0];
+
   // console.log(body);
   // console.log(JSON.stringify(body));
-  const recipientId = body.entry[0].messaging[0].recipient.id;
+  const recipientId = body.entry[0].messaging[0].sender.id;
   const message = body.entry[0].messaging[0].message.text;
   const answer = await botChat.getAnswerFromGPT(message);
   console.log("GPT answer: ", answer);
-  // botChat.sendMessageBackToUser(answer, recipientId);
+  botChat.sendMessageBackToUser(answer, recipientId);
+  console.log("SendFaceBook Success");
   res.sendStatus(200);
 });
 

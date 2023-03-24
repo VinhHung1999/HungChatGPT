@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios = require("axios");
-var client = axios.create({
-    headers: {
-        Authorization: "Bearer " + "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",
-    },
-});
 var callGPTAPI = function (message) {
+    var client = axios.create({
+        headers: {
+            Authorization: "Bearer " + process.env.GPT_ACCESS_TOKEN,
+        },
+    });
     return new Promise(function (resolve, reject) {
         var params = {
             prompt: message,
@@ -24,21 +24,22 @@ var callGPTAPI = function (message) {
         });
     });
 };
-var sendMessageBackToFB = function (recipientId, message) {
+var sendMessageBackToFB = function (message, recipientId) {
     return new Promise(function (resolve, reject) {
+        console.log("recipientId", recipientId);
         var params = {
             recipient: {
-                id: recipientId,
+                id: "6245799878821771",
             },
             messaging_type: "RESPONSE",
             message: {
                 text: message,
             },
         };
-        client
-            .post("https://graph.facebook.com/v16.0/121800517519786/messages?access_token=EAAQ3Xgh37mYBAMLY7mH4waq8mSiTTm4g4iVatZCfF8rLy71p790QMAbRWg6VACu6A7vXBDV2Bh2fVzsJYS1l0bcvQYg4riFsQmoGKS5SkoNINizLIgBCYd2qqPZCvae12Y1OnrD8JEaNoXH2pmIYWFdoTZAeTZBXWAoqrklyUySdNyUvpNJd", params)
+        axios
+            .post("https://graph.facebook.com/v16.0/".concat(process.env.PAGE_ID, "/messages?access_token=").concat(process.env.PAGE_ACCESS_TOKEN), params)
             .then(function (result) {
-            resolve(result.data.choices[0].text);
+            resolve();
         })
             .catch(function (err) {
             reject(err);
