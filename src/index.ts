@@ -43,14 +43,18 @@ app.post("/", async (req, res) => {
   console.log("body", JSON.stringify(body));
   // console.log(JSON.stringify(body));
   const recipientId = body.entry?.[0]?.messaging?.[0]?.sender?.id || "";
-  const message = body.entry?.[0].messaging?.[0].message?.text || "Nothing";
-  console.log("message: ", message);
-  console.log("recipientId: ", recipientId);
-  const answer = await botChat.getAnswerFromGPT(message);
-  console.log("GPT answer: ", answer);
-  // botChat.sendMessageBackToUser(answer, recipientId);
-  console.log("SendFaceBook Success");
-  res.sendStatus(200);
+  if (recipientId !== "121800517519786") {
+    const message = body.entry?.[0].messaging?.[0].message?.text || "Nothing";
+    console.log("message: ", message);
+    console.log("recipientId: ", recipientId);
+    const answer = await botChat.getAnswerFromGPT(message);
+    console.log("GPT answer: ", answer);
+    // botChat.sendMessageBackToUser(answer, recipientId);
+    console.log("SendFaceBook Success");
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(200);
+  }
 });
 
 app.listen(port, () => {
