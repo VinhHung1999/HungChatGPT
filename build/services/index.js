@@ -28,7 +28,7 @@ var sendMessageBackToFB = function (message, recipientId) {
     return new Promise(function (resolve, reject) {
         var params = {
             recipient: {
-                id: "6245799878821771",
+                id: recipientId,
             },
             messaging_type: "RESPONSE",
             message: {

@@ -83,33 +83,28 @@ app.get("/", function (req, res) {
     }
 });
 app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var body, entry, recipientId, message, answer;
-    var _a, _b, _c, _d, _e, _f, _g, _h;
-    return __generator(this, function (_j) {
-        switch (_j.label) {
-            case 0:
-                body = req.body;
-                entry = body.entry[0];
-                console.log("body", JSON.stringify(body));
-                recipientId = ((_e = (_d = (_c = (_b = (_a = body.entry) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.messaging) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.sender) === null || _e === void 0 ? void 0 : _e.id) || "";
-                if (!(recipientId !== process.env.PAGE_ID)) return [3 /*break*/, 2];
-                message = ((_h = (_g = (_f = body.entry) === null || _f === void 0 ? void 0 : _f[0].messaging) === null || _g === void 0 ? void 0 : _g[0].message) === null || _h === void 0 ? void 0 : _h.text) || "Nothing";
-                console.log("message: ", message);
-                console.log("recipientId: ", recipientId);
-                return [4 /*yield*/, botChat.getAnswerFromGPT(message)];
-            case 1:
-                answer = _j.sent();
-                console.log("GPT answer: ", answer);
-                botChat.sendMessageBackToUser(answer, recipientId);
-                console.log("SendFaceBook Success");
-                res.sendStatus(200);
-                return [3 /*break*/, 3];
-            case 2:
-                console.log("botchat message:");
-                res.sendStatus(200);
-                _j.label = 3;
-            case 3: return [2 /*return*/];
+    var body, entry, recipientId;
+    var _a, _b, _c, _d, _e;
+    return __generator(this, function (_f) {
+        body = req.body;
+        entry = body.entry[0];
+        console.log("body", JSON.stringify(body));
+        recipientId = ((_e = (_d = (_c = (_b = (_a = body.entry) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.messaging) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.sender) === null || _e === void 0 ? void 0 : _e.id) || "";
+        if (recipientId !== process.env.PAGE_ID) {
+            // const message = body.entry?.[0].messaging?.[0].message?.text || "Nothing";
+            // console.log("message: ", message);
+            // console.log("recipientId: ", recipientId);
+            // const answer = await botChat.getAnswerFromGPT(message);
+            // console.log("GPT answer: ", answer);
+            // botChat.sendMessageBackToUser(answer, recipientId);
+            // console.log("SendFaceBook Success");
+            res.sendStatus(200);
         }
+        else {
+            console.log("botchat message:");
+            res.sendStatus(200);
+        }
+        return [2 /*return*/];
     });
 }); });
 app.listen(port, function () {
