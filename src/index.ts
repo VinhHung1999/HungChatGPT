@@ -41,10 +41,10 @@ app.post("/", async (req, res) => {
   const body = req.body;
   const entry = body.entry[0];
 
-  // console.log(body);
+  console.log("body", body);
   // console.log(JSON.stringify(body));
-  const recipientId = body.entry[0].messaging[0].sender.id;
-  const message = body.entry[0].messaging[0].message.text;
+  const recipientId = body.entry?.[0]?.messaging?.[0]?.sender?.id || "";
+  const message = body.entry?.[0].messaging?.[0].message?.text || "Nothing";
   const answer = await botChat.getAnswerFromGPT(message);
   console.log("GPT answer: ", answer);
   botChat.sendMessageBackToUser(answer, recipientId);
