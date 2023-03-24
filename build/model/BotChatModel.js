@@ -46,40 +46,15 @@ var BotChatModel = /** @class */ (function () {
     }
     BotChatModel.prototype.getAnswerFromGPT = function (message) {
         return __awaiter(this, void 0, void 0, function () {
-            var answer, e_1;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services_1.default.callGPTAPI(message)];
-                    case 1:
-                        answer = _a.sent();
-                        return [2 /*return*/, answer];
-                    case 2:
-                        e_1 = _a.sent();
-                        // console.log(e);
-                        return [2 /*return*/, ""];
-                    case 3: return [2 /*return*/];
-                }
+                return [2 /*return*/, services_1.default.callGPTAPI(message)];
             });
         });
     };
     BotChatModel.prototype.sendMessageBackToUser = function (message, recipientId) {
         return __awaiter(this, void 0, void 0, function () {
-            var e_2;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services_1.default.sendMessageBackToFB(message, recipientId)];
-                    case 1:
-                        _a.sent();
-                        return [3 /*break*/, 3];
-                    case 2:
-                        e_2 = _a.sent();
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
+                return [2 /*return*/, services_1.default.sendMessageBackToFB(message, recipientId)];
             });
         });
     };

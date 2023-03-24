@@ -37,27 +37,31 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", async (req, res) => {
-  const body = req.body;
-  const entry = body.entry[0];
+  try {
+    const body = req.body;
 
-  console.log("body", JSON.stringify(body));
-  // console.log(JSON.stringify(body));
-  const recipientId = body.entry?.[0]?.messaging?.[0]?.sender?.id || "";
-  console.log("recipientId: ", recipientId);
-  if (recipientId !== process.env.PAGE_ID) {
-    const message = body.entry?.[0].messaging?.[0].message?.text || "Nothing";
-    console.log("message: ", message);
+    console.log("body", JSON.stringify(body));
+    // console.log(JSON.stringify(body));
+    const recipientId = body.entry?.[0]?.messaging?.[0]?.sender?.id || "";
     console.log("recipientId: ", recipientId);
-    const answer = await botChat.getAnswerFromGPT(message);
-    console.log("GPT answer: ", answer);
-    if (answer !== "") {
-      await botChat.sendMessageBackToUser(answer, recipientId);
+    if (recipientId !== process.env.PAGE_ID) {
+      const message = body.entry?.[0].messaging?.[0].message?.text || "Nothing";
+      console.log("message: ", message);
+      console.log("recipientId: ", recipientId);
+      const answer = await botChat.getAnswerFromGPT(message);
+      console.log("GPT answer: ", answer);
+      if (answer !== "") {
+        await botChat.sendMessageBackToUser(answer, recipientId);
+      }
+      console.log("SendFaceBook Success");
+      res.sendStatus(200);
+    } else {
+      console.log("botchat message:");
+      res.sendStatus(200);
     }
-    console.log("SendFaceBook Success");
-    res.sendStatus(200);
-  } else {
-    console.log("botchat message:");
-    res.sendStatus(200);
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(999);
   }
 });
 

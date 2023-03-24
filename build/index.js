@@ -83,13 +83,13 @@ app.get("/", function (req, res) {
     }
 });
 app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var body, entry, recipientId, message, answer;
+    var body, recipientId, message, answer, e_1;
     var _a, _b, _c, _d, _e, _f, _g, _h;
     return __generator(this, function (_j) {
         switch (_j.label) {
             case 0:
+                _j.trys.push([0, 6, , 7]);
                 body = req.body;
-                entry = body.entry[0];
                 console.log("body", JSON.stringify(body));
                 recipientId = ((_e = (_d = (_c = (_b = (_a = body.entry) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.messaging) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.sender) === null || _e === void 0 ? void 0 : _e.id) || "";
                 console.log("recipientId: ", recipientId);
@@ -114,7 +114,13 @@ app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, fun
                 console.log("botchat message:");
                 res.sendStatus(200);
                 _j.label = 5;
-            case 5: return [2 /*return*/];
+            case 5: return [3 /*break*/, 7];
+            case 6:
+                e_1 = _j.sent();
+                console.log(e_1);
+                res.sendStatus(999);
+                return [3 /*break*/, 7];
+            case 7: return [2 /*return*/];
         }
     });
 }); });
