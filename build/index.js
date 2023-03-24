@@ -47,6 +47,7 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
 var app = (0, express_1.default)();
 app.use(express_1.default.json());
 var port = process.env.PORT || 3000;
+var preMessage = "";
 var TOKEN = "EAAQ3Xgh37mYBAL0mHL7lAWvcrqjNO7iFwWA3QNeVN5VJrrai0S0SEhQ3JPeXMZAXgY0NkrFJWzuaBTnMjXsTyLVvpRCJlDZBvpGrTIEUz9AwaT3TPJz6MKCOLQ4jvk4X6ZACVEchgPGANoLvkA6AAW8qLZAy2f8uR2w2H1ZAiuGxpYxnwM3dq";
 var botChat = new model_1.BotChatModel();
 app.get("/gpt", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
@@ -98,8 +99,8 @@ app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, fun
                 senderId = ((_e = (_d = (_c = (_b = (_a = body.entry) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.messaging) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.sender) === null || _e === void 0 ? void 0 : _e.id) || "";
                 console.log("recipientId: ", senderId);
                 console.log("body: ", JSON.stringify(body));
-                if (!(senderId != process.env.PAGE_ID)) return [3 /*break*/, 4];
                 message = ((_h = (_g = (_f = body.entry) === null || _f === void 0 ? void 0 : _f[0].messaging) === null || _g === void 0 ? void 0 : _g[0].message) === null || _h === void 0 ? void 0 : _h.text) || "Nothing";
+                if (!(senderId != process.env.PAGE_ID && preMessage !== message)) return [3 /*break*/, 4];
                 console.log("message: ", message);
                 console.log("recipientId: ", senderId);
                 return [4 /*yield*/, botChat.getAnswerFromGPT(message)];

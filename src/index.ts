@@ -7,6 +7,7 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
 const app = express();
 app.use(express.json());
 const port = process.env.PORT || 3000;
+const preMessage = "";
 
 const TOKEN =
   "EAAQ3Xgh37mYBAL0mHL7lAWvcrqjNO7iFwWA3QNeVN5VJrrai0S0SEhQ3JPeXMZAXgY0NkrFJWzuaBTnMjXsTyLVvpRCJlDZBvpGrTIEUz9AwaT3TPJz6MKCOLQ4jvk4X6ZACVEchgPGANoLvkA6AAW8qLZAy2f8uR2w2H1ZAiuGxpYxnwM3dq";
@@ -51,8 +52,8 @@ app.post("/", async (req, res) => {
     const senderId = body.entry?.[0]?.messaging?.[0]?.sender?.id || "";
     console.log("recipientId: ", senderId);
     console.log("body: ", JSON.stringify(body));
-    if (senderId != process.env.PAGE_ID) {
-      const message = body.entry?.[0].messaging?.[0].message?.text || "Nothing";
+    const message = body.entry?.[0].messaging?.[0].message?.text || "Nothing";
+    if (senderId != process.env.PAGE_ID && preMessage !== message) {
       console.log("message: ", message);
       console.log("recipientId: ", senderId);
       const answer = await botChat.getAnswerFromGPT(message);
