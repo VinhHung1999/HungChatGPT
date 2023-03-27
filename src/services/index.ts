@@ -1,6 +1,14 @@
+import {
+  Action,
+  ChatRole,
+  INTRODUCTION_TEXT,
+  NOTE_IMPORTANT,
+} from "../constants";
+import { GPTChatModel } from "../model/GPTChatModel";
+
 const axios = require("axios");
 
-const callGPTAPI = (message: string): Promise<string> => {
+const callGPTAPI = (messages: GPTChatModel[]): Promise<string> => {
   const client = axios.create({
     headers: {
       Authorization: "Bearer " + process.env.GPT_ACCESS_TOKEN,
@@ -8,7 +16,11 @@ const callGPTAPI = (message: string): Promise<string> => {
   });
   return new Promise((resolve, reject) => {
     const params = {
-      messages: [{ role: "user", content: message }],
+      messages: [
+        { role: ChatRole.System, content: INTRODUCTION_TEXT },
+        ...messages,
+        { role: ChatRole.System, content: NOTE_IMPORTANT },
+      ],
       model: "gpt-3.5-turbo",
     };
     client
@@ -24,7 +36,8 @@ const callGPTAPI = (message: string): Promise<string> => {
 
 const sendMessageBackToFB = (
   message: string,
-  recipientId: string
+  recipientId: string,
+  pageId: string
 ): Promise<void> => {
   return new Promise((resolve, reject) => {
     const params = {
@@ -38,7 +51,7 @@ const sendMessageBackToFB = (
     };
     axios
       .post(
-        `https://graph.facebook.com/v16.0/${process.env.PAGE_ID}/messages?access_token=${process.env.PAGE_ACCESS_TOKEN}`,
+        `https://graph.facebook.com/v16.0/${pageId}/messages?access_token=${process.env.PAGE_ACCESS_TOKEN}`,
         params
       )
       .then((result: any) => {
@@ -50,6 +63,28 @@ const sendMessageBackToFB = (
   });
 };
 
-const Services = { callGPTAPI, sendMessageBackToFB };
+const sendAction = (recipientId: string, pageId: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const params = {
+      recipient: {
+        id: recipientId,
+      },
+      sender_action: Action.typingOn,
+    };
+    axios
+      .post(
+        `https://graph.facebook.com/v16.0/${pageId}/messages?access_token=${process.env.PAGE_ACCESS_TOKEN}`,
+        params
+      )
+      .then((result: any) => {
+        resolve();
+      })
+      .catch((err: any) => {
+        reject(err);
+      });
+  });
+};
+
+const Services = { callGPTAPI, sendMessageBackToFB, sendAction };
 
 export default Services;

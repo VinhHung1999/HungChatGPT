@@ -41,9 +41,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var model_1 = require("./model");
-var dotenv = require("dotenv");
-var path = require("path");
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+var dotenv_1 = __importDefault(require("dotenv"));
+var path_1 = __importDefault(require("path"));
+dotenv_1.default.config({ path: path_1.default.resolve(__dirname, "../.env") });
 var app = (0, express_1.default)();
 app.use(express_1.default.json());
 var port = process.env.PORT || 3000;
@@ -51,13 +51,19 @@ var preMessage = "";
 var TOKEN = "EAAQ3Xgh37mYBAL0mHL7lAWvcrqjNO7iFwWA3QNeVN5VJrrai0S0SEhQ3JPeXMZAXgY0NkrFJWzuaBTnMjXsTyLVvpRCJlDZBvpGrTIEUz9AwaT3TPJz6MKCOLQ4jvk4X6ZACVEchgPGANoLvkA6AAW8qLZAy2f8uR2w2H1ZAiuGxpYxnwM3dq";
 var botChat = new model_1.BotChatModel();
 app.get("/gpt", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var answer;
+    var userCollection, result;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, botChat.getAnswerFromGPT("test")];
+            case 0:
+                userCollection = new model_1.UserCollectionModel();
+                return [4 /*yield*/, userCollection.updateUserPreMessageById("123", {
+                        user: "test",
+                        bot: "test",
+                    })];
             case 1:
-                answer = _a.sent();
-                res.send(answer);
+                result = _a.sent();
+                console.log(result);
+                res.sendStatus(200);
                 return [2 /*return*/];
         }
     });
@@ -89,42 +95,38 @@ app.get("/private-right", function (req, res) {
     res.sendStatus(200);
 });
 app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var body, senderId, message, answer, e_1;
-    var _a, _b, _c, _d, _e, _f, _g, _h;
-    return __generator(this, function (_j) {
-        switch (_j.label) {
+    var body, senderId, pageId, message, e_1;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+    return __generator(this, function (_l) {
+        switch (_l.label) {
             case 0:
-                _j.trys.push([0, 6, , 7]);
+                _l.trys.push([0, 6, , 7]);
                 body = req.body;
                 senderId = ((_e = (_d = (_c = (_b = (_a = body.entry) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.messaging) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.sender) === null || _e === void 0 ? void 0 : _e.id) || "";
-                console.log("recipientId: ", senderId);
+                pageId = (_f = body.entry) === null || _f === void 0 ? void 0 : _f[0].id;
                 console.log("body: ", JSON.stringify(body));
-                message = ((_h = (_g = (_f = body.entry) === null || _f === void 0 ? void 0 : _f[0].messaging) === null || _g === void 0 ? void 0 : _g[0].message) === null || _h === void 0 ? void 0 : _h.text) || "Nothing";
-                if (!(senderId != process.env.PAGE_ID && preMessage !== message)) return [3 /*break*/, 4];
-                preMessage = message;
+                message = ((_j = (_h = (_g = body.entry) === null || _g === void 0 ? void 0 : _g[0].messaging) === null || _h === void 0 ? void 0 : _h[0].message) === null || _j === void 0 ? void 0 : _j.text) || "Nothing";
+                if (!(body.object === "page")) return [3 /*break*/, 4];
+                if (!(((_k = process.env.PAGE_ID) === null || _k === void 0 ? void 0 : _k.includes(pageId)) &&
+                    senderId != process.env.PAGE_ID)) return [3 /*break*/, 2];
                 console.log("message: ", message);
-                console.log("recipientId: ", senderId);
-                return [4 /*yield*/, botChat.getAnswerFromGPT(message)];
+                return [4 /*yield*/, botChat.answer(senderId, pageId, message)];
             case 1:
-                answer = _j.sent();
-                console.log("GPT answer: ", answer);
-                if (!(answer !== "")) return [3 /*break*/, 3];
-                return [4 /*yield*/, botChat.sendMessageBackToUser(answer, senderId)];
+                _l.sent();
+                res.status(200).send("EVENT_RECEIVED");
+                return [3 /*break*/, 3];
             case 2:
-                _j.sent();
-                _j.label = 3;
-            case 3:
-                console.log("SendFaceBook Success");
-                res.sendStatus(200);
-                return [3 /*break*/, 5];
+                res.status(200).send("EVENT_RECEIVED");
+                _l.label = 3;
+            case 3: return [3 /*break*/, 5];
             case 4:
-                res.sendStatus(200);
-                _j.label = 5;
+                res.status(200).send("EVENT_RECEIVED");
+                _l.label = 5;
             case 5: return [3 /*break*/, 7];
             case 6:
-                e_1 = _j.sent();
+                e_1 = _l.sent();
                 console.log(e_1);
-                res.sendStatus(502);
+                res.sendStatus(404);
                 return [3 /*break*/, 7];
             case 7: return [2 /*return*/];
         }

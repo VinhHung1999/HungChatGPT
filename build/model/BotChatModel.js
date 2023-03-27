@@ -40,21 +40,82 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BotChatModel = void 0;
+var constants_1 = require("../constants");
 var services_1 = __importDefault(require("../services"));
+var ServiceUtils_1 = __importDefault(require("../utils/ServiceUtils"));
+var GPTChatModel_1 = require("./GPTChatModel");
+var UserCollectionModel_1 = require("./UserCollectionModel");
 var BotChatModel = /** @class */ (function () {
     function BotChatModel() {
     }
-    BotChatModel.prototype.getAnswerFromGPT = function (message) {
+    BotChatModel.prototype.answer = function (senderId, pageId, message) {
         return __awaiter(this, void 0, void 0, function () {
+            var userCollection, preConversation, answer;
             return __generator(this, function (_a) {
-                return [2 /*return*/, services_1.default.callGPTAPI(message)];
+                switch (_a.label) {
+                    case 0:
+                        userCollection = new UserCollectionModel_1.UserCollectionModel();
+                        return [4 /*yield*/, userCollection.getPreMessageInfoBy(senderId)];
+                    case 1:
+                        preConversation = _a.sent();
+                        preConversation.push(new GPTChatModel_1.GPTChatModel(constants_1.ChatRole.User, message));
+                        return [4 /*yield*/, services_1.default.callGPTAPI(preConversation)];
+                    case 2:
+                        answer = _a.sent();
+                        console.log("answer: ", answer);
+                        if (!(answer !== "")) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.sendMessage(answer, senderId, pageId)];
+                    case 3:
+                        _a.sent();
+                        return [4 /*yield*/, userCollection.updateUserPreMessageById(senderId, {
+                                user: message,
+                                bot: answer,
+                            })];
+                    case 4:
+                        _a.sent();
+                        _a.label = 5;
+                    case 5: return [2 /*return*/];
+                }
             });
         });
     };
-    BotChatModel.prototype.sendMessageBackToUser = function (message, recipientId) {
+    BotChatModel.prototype.sendMessage = function (message, senderId, pageId) {
         return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
             return __generator(this, function (_a) {
-                return [2 /*return*/, services_1.default.sendMessageBackToFB(message, recipientId)];
+                switch (_a.label) {
+                    case 0:
+                        if (!message.includes("\n")) return [3 /*break*/, 4];
+                        return [4 /*yield*/, services_1.default.sendAction(senderId, pageId)];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, ServiceUtils_1.default.delay(2000)];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, services_1.default.sendMessageBackToFB(message, senderId, pageId)];
+                    case 3:
+                        _a.sent();
+                        return [3 /*break*/, 5];
+                    case 4:
+                        message.split(".").forEach(function (sentence) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, services_1.default.sendAction(senderId, pageId)];
+                                    case 1:
+                                        _a.sent();
+                                        return [4 /*yield*/, ServiceUtils_1.default.delay(2000)];
+                                    case 2:
+                                        _a.sent();
+                                        return [4 /*yield*/, services_1.default.sendMessageBackToFB(sentence, senderId, pageId)];
+                                    case 3:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); });
+                        _a.label = 5;
+                    case 5: return [2 /*return*/];
+                }
             });
         });
     };

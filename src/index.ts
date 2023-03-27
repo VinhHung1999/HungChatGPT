@@ -1,7 +1,8 @@
 import express from "express";
-import { BotChatModel } from "./model";
-const dotenv = require("dotenv");
-const path = require("path");
+import { BotChatModel, MongoClientModel, UserCollectionModel } from "./model";
+import dotenv from "dotenv";
+import path from "path";
+
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const app = express();
@@ -14,9 +15,15 @@ const TOKEN =
 
 const botChat = new BotChatModel();
 
-app.get("/gpt", async (req: any, res: any) => {
-  const answer = await botChat.getAnswerFromGPT("test");
-  res.send(answer);
+app.get("/gpt", async (req, res) => {
+  // const answer = await botChat.getAnswerFromGPT("test");
+  const userCollection = new UserCollectionModel();
+  const result = await userCollection.updateUserPreMessageById("123", {
+    user: "test",
+    bot: "test",
+  });
+  console.log(result);
+  res.sendStatus(200);
 });
 
 app.get("/webhook", (req, res) => {
@@ -48,28 +55,27 @@ app.get("/private-right", (req, res) => {
 app.post("/", async (req, res) => {
   try {
     const body = req.body;
-
     const senderId = body.entry?.[0]?.messaging?.[0]?.sender?.id || "";
-    console.log("recipientId: ", senderId);
+    const pageId = body.entry?.[0].id;
     console.log("body: ", JSON.stringify(body));
     const message = body.entry?.[0].messaging?.[0].message?.text || "Nothing";
-    if (senderId != process.env.PAGE_ID && preMessage !== message) {
-      preMessage = message;
-      console.log("message: ", message);
-      console.log("recipientId: ", senderId);
-      const answer = await botChat.getAnswerFromGPT(message);
-      console.log("GPT answer: ", answer);
-      if (answer !== "") {
-        await botChat.sendMessageBackToUser(answer, senderId);
+    if (body.object === "page") {
+      if (
+        process.env.PAGE_ID?.includes(pageId) &&
+        senderId != process.env.PAGE_ID
+      ) {
+        console.log("message: ", message);
+        await botChat.answer(senderId, pageId, message);
+        res.status(200).send("EVENT_RECEIVED");
+      } else {
+        res.status(200).send("EVENT_RECEIVED");
       }
-      console.log("SendFaceBook Success");
-      res.sendStatus(200);
     } else {
-      res.sendStatus(200);
+      res.status(200).send("EVENT_RECEIVED");
     }
   } catch (e) {
     console.log(e);
-    res.sendStatus(502);
+    res.sendStatus(404);
   }
 });
 
