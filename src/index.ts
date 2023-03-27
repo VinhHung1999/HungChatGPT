@@ -1,5 +1,5 @@
 import express from "express";
-import { BotChatModel, MongoClientModel, UserCollectionModel } from "./model";
+import { BotChatModel, UserCollectionModel } from "./model";
 import dotenv from "dotenv";
 import path from "path";
 
@@ -62,9 +62,11 @@ app.post("/", async (req, res) => {
     if (body.object === "page") {
       if (
         process.env.PAGE_ID?.includes(pageId) &&
-        senderId != process.env.PAGE_ID
+        senderId != process.env.PAGE_ID &&
+        message !== preMessage
       ) {
         console.log("message: ", message);
+        preMessage = message;
         await botChat.answer(senderId, pageId, message);
         res.status(200).send("EVENT_RECEIVED");
       } else {
