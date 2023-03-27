@@ -63,7 +63,8 @@ var BotChatModel = /** @class */ (function () {
                     case 2:
                         answer = _a.sent();
                         console.log("answer: ", answer);
-                        if (!(answer !== "")) return [3 /*break*/, 5];
+                        if (answer === "")
+                            return [2 /*return*/];
                         return [4 /*yield*/, this.sendMessage(answer, senderId, pageId)];
                     case 3:
                         _a.sent();
@@ -73,48 +74,52 @@ var BotChatModel = /** @class */ (function () {
                             })];
                     case 4:
                         _a.sent();
-                        _a.label = 5;
-                    case 5: return [2 /*return*/];
+                        return [2 /*return*/];
                 }
             });
         });
     };
     BotChatModel.prototype.sendMessage = function (message, senderId, pageId) {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _i, _a, sentence;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         if (!message.includes("\n")) return [3 /*break*/, 4];
                         return [4 /*yield*/, services_1.default.sendAction(senderId, pageId)];
                     case 1:
-                        _a.sent();
-                        return [4 /*yield*/, ServiceUtils_1.default.delay(2000)];
+                        _b.sent();
+                        return [4 /*yield*/, ServiceUtils_1.default.delay(3000)];
                     case 2:
-                        _a.sent();
+                        _b.sent();
                         return [4 /*yield*/, services_1.default.sendMessageBackToFB(message, senderId, pageId)];
                     case 3:
-                        _a.sent();
-                        return [3 /*break*/, 5];
+                        _b.sent();
+                        return [3 /*break*/, 10];
                     case 4:
-                        message.split(".").forEach(function (sentence) { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, services_1.default.sendAction(senderId, pageId)];
-                                    case 1:
-                                        _a.sent();
-                                        return [4 /*yield*/, ServiceUtils_1.default.delay(2000)];
-                                    case 2:
-                                        _a.sent();
-                                        return [4 /*yield*/, services_1.default.sendMessageBackToFB(sentence, senderId, pageId)];
-                                    case 3:
-                                        _a.sent();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); });
-                        _a.label = 5;
-                    case 5: return [2 /*return*/];
+                        _i = 0, _a = message.split(".");
+                        _b.label = 5;
+                    case 5:
+                        if (!(_i < _a.length)) return [3 /*break*/, 10];
+                        sentence = _a[_i];
+                        if (sentence === "")
+                            return [3 /*break*/, 9];
+                        return [4 /*yield*/, services_1.default.sendAction(senderId, pageId)];
+                    case 6:
+                        _b.sent();
+                        return [4 /*yield*/, ServiceUtils_1.default.delay(3000)];
+                    case 7:
+                        _b.sent();
+                        return [4 /*yield*/, services_1.default.sendMessageBackToFB(sentence, senderId, pageId)];
+                    case 8:
+                        _b.sent();
+                        _b.label = 9;
+                    case 9:
+                        _i++;
+                        return [3 /*break*/, 5];
+                    case 10:
+                        console.log("Send Messages Successfully!!");
+                        return [2 /*return*/];
                 }
             });
         });

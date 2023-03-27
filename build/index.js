@@ -108,8 +108,10 @@ app.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, fun
                 message = ((_j = (_h = (_g = body.entry) === null || _g === void 0 ? void 0 : _g[0].messaging) === null || _h === void 0 ? void 0 : _h[0].message) === null || _j === void 0 ? void 0 : _j.text) || "Nothing";
                 if (!(body.object === "page")) return [3 /*break*/, 4];
                 if (!(((_k = process.env.PAGE_ID) === null || _k === void 0 ? void 0 : _k.includes(pageId)) &&
-                    senderId != process.env.PAGE_ID)) return [3 /*break*/, 2];
+                    senderId != process.env.PAGE_ID &&
+                    message !== preMessage)) return [3 /*break*/, 2];
                 console.log("message: ", message);
+                preMessage = message;
                 return [4 /*yield*/, botChat.answer(senderId, pageId, message)];
             case 1:
                 _l.sent();
